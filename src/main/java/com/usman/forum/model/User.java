@@ -1,9 +1,6 @@
 package com.usman.forum.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.format.annotation.NumberFormat;
+
 
 @Data
 @AllArgsConstructor
@@ -28,15 +25,16 @@ public class User extends AbstractModel{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
-    @NotBlank
-    @NotNull(message = "username must be provided")
-    private String fName;
-    private String sName;
+
+    @Column(nullable = false)
+    private String firstName;
+    private String secondName;
     private String field;
     @NotBlank
     @Email(message = "email must be provided")
+    @Column(unique = true ,nullable = false)
     private  String email;
     @NotBlank
-    @NumberFormat
+    @Column(unique = true,nullable = false)
     private String  number;
 }

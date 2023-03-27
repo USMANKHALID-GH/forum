@@ -31,9 +31,10 @@ public class Answers  extends AbstractModel{
     private String image;
 
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "questions")
     private List<Question> questions;
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
 }

@@ -24,5 +24,6 @@ public class Comments  extends AbstractModel{
     private boolean correct;
 
     @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
 }
