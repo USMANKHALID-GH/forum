@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.util.List;
+
 
 @Data
 @AllArgsConstructor
@@ -31,6 +33,13 @@ public class Question extends AbstractModel {
     private String image;
 
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     private User user;
+    @ManyToMany
+    @JoinTable(
+            name = "question_answer",
+            joinColumns = @JoinColumn(name = "question_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id"))
+    private List<Answers> answers;
+
 }
