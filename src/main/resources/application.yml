@@ -3,7 +3,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     password: 123456789
     username: root
-    url: jdbc:mysql://localhost:3306/animals
+    url: jdbc:mysql://localhost:3306/form
 
     security:
       user:
@@ -12,12 +12,16 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
 
 
 
 hibernate:
+  cache:
+    region:
+      factory_class: org.hibernate.cache.ehcache.internal.EhcacheRegionFactory
+    use_second_level_cache: true
   dialect=org:
     hibernate:
       dialect:
