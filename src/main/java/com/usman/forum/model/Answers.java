@@ -1,0 +1,39 @@
+package com.usman.forum.model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@DynamicInsert
+@DynamicUpdate
+@EqualsAndHashCode(callSuper = true)
+public class Answers  extends AbstractModel{
+
+    private static final long serialVersionUID=1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long answerId;
+    @NotBlank
+    @NotNull(message = "write your answers")
+    private String answers;
+    private String image;
+
+
+    @ManyToMany
+    private List<Question> questions;
+    @ManyToOne
+    private User user;
+
+}
