@@ -1,17 +1,23 @@
 package com.usman.forum.service;
 
-import com.usman.forum.dto.QuestionToShowDto;
-import com.usman.forum.model.Question;
+
+import com.usman.forum.model.Questions;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
+
 
 public interface QuestionService {
 
-    void saveQuestion(Long userId, Question question);
+    void saveQuestion(Long userId, Questions questions);
 
-    Page<Question>  findAllQuestion(Pageable pageable,String search);
+    Page<Questions>  findAllQuestion(Pageable pageable, String search);
 
 
-    Page<Question> findAllQuestion1(Pageable pageable, String search);
+    Page<Questions> findAllQuestion1(Pageable pageable, String search);
+
+    void deleteQuestion(Long questionId);
+
+    Questions findAQuestion(Long id);
+
+    void updateQuestion(Long questionId, Questions toEntity);
 }
