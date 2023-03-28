@@ -22,14 +22,17 @@ public class SubAnswers extends AbstractModel {
     private static final long serialVersionUID=1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long subAnswersId;
-    @NotBlank
-    @NotNull(message = "write your answers")
-    private String subAnswer;
-    private String image;
-    @OneToOne
-    private Answers answers;
+    private Long Id;
     @ManyToOne
     private User user;
+    @NotBlank
+    @NotNull(message = "write your answers")
+    private String content;
+    private String image;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Answers answer;
+
+
+
 
 }
