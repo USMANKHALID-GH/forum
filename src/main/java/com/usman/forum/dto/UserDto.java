@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserDto extends BaseDto {
     private String firstName;
-    private String secondName;
-    private String field;
+    private String lastName;
+    private String relatedField;
     private  String email;
-    private String  number;
+    private String  phoneNumber;
 }
