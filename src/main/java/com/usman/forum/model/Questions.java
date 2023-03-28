@@ -20,26 +20,27 @@ import java.util.List;
 @DynamicInsert
 @DynamicUpdate
 @EqualsAndHashCode(callSuper = true)
-public class Question extends AbstractModel {
+public class Questions extends AbstractModel {
     private static final long serialVersionUID=1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long questionId;
-
-    private String questionTitle;
+    private Long Id;
+    private String title;
     @NotBlank
-    @NotNull(message = "what your question")
-    private String questions;
+    @NotNull
+    private String content;
     private String image;
 
+    private boolean isAnswered;
+
+
+
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "user_id",nullable = false)
     private User user;
-    @ManyToMany
-    @JoinTable(
-            name = "question_answer",
-            joinColumns = @JoinColumn(name = "question_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id"))
-    private List<Answers> answers;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    private List<Answers> answer;
+
 
 }

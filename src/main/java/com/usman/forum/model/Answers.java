@@ -22,19 +22,24 @@ import java.util.List;
 public class Answers  extends AbstractModel{
 
     private static final long serialVersionUID=1L;
+//    naming
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long answerId;
+    private Long Id;
+    @ManyToOne
+    @JoinColumn(name = "user_id" ,nullable = false)
+    private User user;
     @NotBlank
     @NotNull(message = "write your answers")
-    private String answers;
+    private String content;
     private String image;
-
-
-    @ManyToMany(mappedBy = "questions")
-    private List<Question> questions;
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "question_id" ,nullable = false)
+    private Questions question;
+    @OneToMany(mappedBy = "answer",fetch = FetchType.LAZY)
+    private List<SubAnswers> subAnswers;
+    private  boolean bestAnswer;
+
+
 
 }
