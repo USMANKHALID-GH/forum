@@ -1,8 +1,7 @@
 package com.usman.forum.service.Implementation;
 
-import com.usman.forum.dto.QuestionToShowDto;
 import com.usman.forum.exception.BusinessException;
-import com.usman.forum.model.Question;
+import com.usman.forum.model.Questions;
 import com.usman.forum.model.User;
 import com.usman.forum.repository.QuestionRepository;
 import com.usman.forum.repository.UserRepository;
@@ -21,32 +20,67 @@ public class QuestionImpl implements QuestionService {
     private final QuestionRepository questionRepository;
     private  final UserRepository userRepository;
     @Override
-    public void saveQuestion(Long userId, Question question) {
+    public void saveQuestion(Long userId, Questions questions) {
         User user = findUser(userId);
-        question.setUser(user);
-        questionRepository.save(question);
+        questions.setAnswered(false);
+        questions.setUser(user);
+        questionRepository.save(questions);
     }
 
     @Override
-    public Page<Question> findAllQuestion(Pageable pageable, String search) {
+    public Page<Questions> findAllQuestion(Pageable pageable, String search) {
        if(search==null){
-           log.info(search+ " -------------------------");
+
            return questionRepository.findAll(pageable);
 
        }
-        return questionRepository.findQuestionByQuestionTitleContaining(search,pageable);
+        return questionRepository.findQuestionByTitleContaining(search,pageable);
 
     }
 
     @Override
-    public Page<Question> findAllQuestion1(Pageable pageable, String search) {
-        return questionRepository.findQuestionByQuestionTitleContaining(search,pageable);
+    public Page<Questions> findAllQuestion1(Pageable pageable, String search) {
+        return questionRepository.findQuestionByTitleContaining(search,pageable);
+    }
+
+    @Override
+    public void deleteQuestion(Long questionId) {
+        Questions questions =findQuestion(questionId);
+        questionRepository.delete(questions);
+    }
+
+    @Override
+    public Questions findAQuestion(Long id) {
+        return findQuestion(id);
+    }
+
+    @Override
+    public void updateQuestion(Long questionId, Questions toEntity) {
+        Questions questions =findQuestion(questionId);
+
+        if(!(toEntity.getTitle().isEmpty()  ||toEntity.getTitle()==null)){
+            questions.setTitle(toEntity.getTitle());
+        }
+        if(!(toEntity.getImage().isEmpty()  || toEntity.getImage()==null)){
+            questions.setImage(toEntity.getImage());
+        }
+        if(!(toEntity.getContent().isEmpty()  || toEntity.getContent()==null)){
+            questions.setContent(toEntity.getContent());
+        }
+       questionRepository.save(questions);
     }
 
 
-    private User findUser(Long id){
+    private  final User findUser(Long id){
         User user= userRepository.findById(id).
                 orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND, "There is  not such Id in our System: "+id));
         return user;
+    }
+
+    private final Questions findQuestion(Long id)
+    {
+        Questions questions = questionRepository.findById(id).
+                orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND, "There is  not such Id in our System: "+id));
+        return questions;
     }
 }

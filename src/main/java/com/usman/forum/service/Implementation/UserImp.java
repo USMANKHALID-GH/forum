@@ -7,6 +7,8 @@ import com.usman.forum.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +27,8 @@ public class UserImp implements UserService {
     @Override
     public void updateUser(Long id, @Valid User user) {
         User user1=findUserByID(id);
-        if(!(user.getField().isEmpty()  || user.getField()==null)){
-            user1.setField(user.getField());
+        if(!(user.getRelatedField().isEmpty()  || user.getRelatedField()==null)){
+            user1.setRelatedField(user.getRelatedField());
         }
         if(!(user.getEmail().isEmpty()  || user.getEmail()==null)){
             user1.setEmail(user.getEmail());
@@ -34,17 +36,33 @@ public class UserImp implements UserService {
         if(!(user.getFirstName().isEmpty()  || user.getFirstName()==null)){
             user1.setFirstName(user.getFirstName());
         }
-        if(!(user.getSecondName().isEmpty()  || user.getSecondName()==null)){
-            user1.setSecondName(user.getSecondName());
+        if(!(user.getLastName().isEmpty()  || user.getLastName()==null)){
+            user1.setLastName(user.getLastName());
         }
-        if(!(user.getNumber().isEmpty()  || user.getNumber()==null)){
-            user1.setNumber(user.getNumber());
+        if(!(user.getPhoneNumber().isEmpty()  || user.getPhoneNumber()==null)){
+            user1.setPhoneNumber(user.getPhoneNumber());
         }
 
      }
 
+    @Override
+    public void deleteUser(Long id) {
+        User user=findUserByID(id);
+        userRepository.delete(user);
+    }
 
-     private User findUserByID(Long id){
+    @Override
+    public User findUser(Long id) {
+        return findUserByID(id);
+    }
+
+    @Override
+    public Page<User> findAllUser(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
+
+    private User findUserByID(Long id){
          User user= userRepository.findById(id).
                  orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND, "There is  not such Id in our System: "+id));
          return user;
