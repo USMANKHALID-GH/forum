@@ -5,6 +5,7 @@ import com.usman.forum.dto.BaseResponseDto;
 
 import com.usman.forum.dto.SubAnswerDto;
 import com.usman.forum.mapper.AnswerMapper;
+import com.usman.forum.model.Answers;
 import com.usman.forum.service.AnswersService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -58,9 +60,32 @@ public class AnswerController {
     }
 
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<BaseResponseDto> deleteAnswer(@PathVariable("id") Long id ,@RequestHeader(name = "questionId") Long questionId){
+
+        service.deleteAnswer(id,questionId);
+        return ResponseEntity.ok(BaseResponseDto.builder().message("Answer deleted successfully").build());
+
+    }
 
 
-//    public  ResponseEntity<AnswerDto>
+    @PostMapping("/{id}/best_answer")
+    public ResponseEntity<BaseResponseDto> bestAnswer(@PathVariable("id") Long id,@RequestHeader(name = "questionId") Long questionId ){
+
+        service.bestAnswer(id,questionId);
+        return ResponseEntity.ok(BaseResponseDto.builder().message("Answer deleted successfully").build());
+
+    }
+
+
+
+//    @GetMapping("/answers_and_subanswers")
+//    public  ResponseEntity<List<Object>>  getAllAnswersIncludingSubAnswers(Pageable pageable){
+//        return  ResponseEntity.ok(service.getAllAnswersIncludingSubAnswers(pageable));
+
+//    }
+
+
 
 
 

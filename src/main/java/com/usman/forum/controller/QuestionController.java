@@ -40,24 +40,21 @@ public class QuestionController {
 
     @PostMapping("/")
     public ResponseEntity<BaseResponseDto> saveQuestion(@RequestHeader(name = "userId") Long userId , @RequestBody QuestionDto questionDto){
-          log.info("before mapping "+questionDto);
 
-        Questions o=mapper.toEntity(questionDto);
-        log.info("after mapping repo" + o);
           service.saveQuestion(userId,mapper.toEntity(questionDto));
 
          return  ResponseEntity.ok(new BaseResponseDto().builder().message("Question asked successfully").build());
     }
 
-    @DeleteMapping("/{questionId}")
-    public ResponseEntity<BaseResponseDto> deleteQuestion(@PathVariable("questionId") Long questionId ){
+    @DeleteMapping("/{question_id}")
+    public ResponseEntity<BaseResponseDto> deleteQuestion(@PathVariable("question_id") Long questionId ){
 
         service.deleteQuestion(questionId);
         return  ResponseEntity.ok(new BaseResponseDto().builder().message("Question deleted successfully").build());
     }
 
-    @PutMapping("/{questionId}")
-    public ResponseEntity<BaseResponseDto> updateQuestion(@PathVariable("questionId") Long questionId, @RequestBody QuestionDto questionDto){
+    @PutMapping("/{question_id}")
+    public ResponseEntity<BaseResponseDto> updateQuestion(@PathVariable("question_id") Long questionId, @RequestBody QuestionDto questionDto){
 
         service.updateQuestion(questionId,mapper.toEntity(questionDto));
         return  ResponseEntity.ok(new BaseResponseDto().builder().message("Question updated successfully").build());
