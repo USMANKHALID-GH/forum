@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.Optional;
+
 @Validated
 @Service
 @AllArgsConstructor
@@ -26,9 +28,17 @@ public class SubAnswersImp implements SubAnswerService {
     private final AnswerRepository answerRepository;
 
     @Override
-    public void saveSubAnswer(SubAnswers subAnswers, Long uid, Long aid) {
-        User user=userRepository.findById(uid).get();
-        Answers answer=answerRepository.findById(aid).get();
+    public void saveSubAnswer(SubAnswers subAnswers, Long userid, Long answerId) {
+        User user=userRepository.findById(userid).get();
+        Answers answer=answerRepository.findById(answerId).get();
+
+        Optional<SubAnswers> alreadyAnswered= subAnswerRepository.findSubAnswerByQuestionAndUser(answerId,userid);
+        log.info("///////////////////////////..............................");
+        if( alreadyAnswered.isPresent()){
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "You have already " +
+                    "answered this question Update or delete the previous answer");
+        }
+
         subAnswers.setUser(user);
         subAnswers.setAnswer(answer);
         subAnswerRepository.save(subAnswers);
@@ -37,7 +47,7 @@ public class SubAnswersImp implements SubAnswerService {
 
     @Override
     public void updateSubAnswer(SubAnswers toEntity, Long id) {
-        SubAnswers subAnswers=findSubAswer(id);
+        SubAnswers subAnswers= findSubAnswerById(id);
         if(!(toEntity.getContent().isEmpty()  ||toEntity.getContent()==null)){
             subAnswers.setContent(toEntity.getContent());
         }
@@ -51,7 +61,7 @@ public class SubAnswersImp implements SubAnswerService {
 
     @Override
     public void deleteSubAnswer(Long id) {
-        subAnswerRepository.delete(findSubAswer(id));
+        subAnswerRepository.delete(findSubAnswerById(id));
     }
 
     @Override
@@ -61,10 +71,10 @@ public class SubAnswersImp implements SubAnswerService {
 
     @Override
     public SubAnswers findSubAnswer(Long id) {
-        return findSubAswer(id);
+        return findSubAnswerById(id);
     }
 
-    private SubAnswers findSubAswer(Long id){
+    private SubAnswers findSubAnswerById(Long id){
         return subAnswerRepository.findById(id)
                 .orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND,"There is no such Id: "+id));
     }

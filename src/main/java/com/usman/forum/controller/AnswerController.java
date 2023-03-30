@@ -52,8 +52,8 @@ public class AnswerController {
 
     @PostMapping("/")
     public ResponseEntity<BaseResponseDto> saveAnswer(@RequestHeader Map<String, String> params, @RequestBody AnswerDto answerDtoDto){
-         Long userid=Long.parseLong(params.get("userid"));
-         Long questionId=Long.parseLong(params.get("qid"));
+         Long userid= Long.parseLong(params.get("userid"));
+         Long questionId=Long.parseLong(params.get("questionid"));
          service.saveAnswer(mapper.toEntity(answerDtoDto),userid,questionId);
          return ResponseEntity.ok(BaseResponseDto.builder().message("Answer saved successfully").build());
 
@@ -76,22 +76,6 @@ public class AnswerController {
         return ResponseEntity.ok(BaseResponseDto.builder().message("Answer deleted successfully").build());
 
     }
-
-
-
-//    @GetMapping("/answers_and_subanswers")
-//    public  ResponseEntity<List<Object>>  getAllAnswersIncludingSubAnswers(Pageable pageable){
-//        return  ResponseEntity.ok(service.getAllAnswersIncludingSubAnswers(pageable));
-
-//    }
-
-
-
-
-
-
-
-
 
 
 

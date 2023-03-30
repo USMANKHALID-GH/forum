@@ -21,6 +21,5 @@ public class AnswerDto extends BaseDto {
     private String content;
     private String image;
     private LocalDateTime createdDate;
-
-//    private List<SubAnswers> subAnswers;
+    private List<SubAnswerDto> subAnswers;
 }

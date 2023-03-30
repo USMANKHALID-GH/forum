@@ -43,8 +43,10 @@ public class SubAnswerController {
 
     @PostMapping("/")
     public ResponseEntity<BaseResponseDto> saveSubAnswer(@RequestHeader Map<String, String> params, @RequestBody SubAnswerDto subAnswerDtoDto){
+       log.info(params.get("userid")+"======================");
+       log.info(params.get("answerid")+"111111111111111111");
         Long userid=Long.parseLong(params.get("userid"));
-        Long questionId=Long.parseLong(params.get("qid"));
+        Long questionId=Long.parseLong(params.get("answerid"));
         service.saveSubAnswer(mapper.toEntity(subAnswerDtoDto),userid,questionId);
         return ResponseEntity.ok(BaseResponseDto.builder().message("SubAnswer saved successfully").build());
     }

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -35,9 +36,17 @@ public class AnswerImp  implements AnswersService {
     private  final UserRepository userRepository;
 
     @Override
-    public void saveAnswer(@Valid Answers answers , Long uid, Long aid) {
+    public void saveAnswer(@Valid Answers answers , Long uid, Long questionid) {
+
+
         User user=userRepository.findById(uid).get();
-        Questions question =questionRepository.findById(aid).get();
+        Questions question =questionRepository.findById( questionid).get();
+
+        Optional<Answers> alreadyAnswered= answerRepository.findAnswerByQuestionAndUser(questionid,uid);
+        if( alreadyAnswered.isPresent()){
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "You have already " +
+                    "answered this question Update or delete the previous answer");
+        }
         question.setAnswered(true);
         answers.setUser(user);
         answers.setQuestion(question);
@@ -97,28 +106,8 @@ public class AnswerImp  implements AnswersService {
         answerRepository.save(answer);
     }
 
-//    experiment will need an explanation
 
-//    public List<Object>  getAllAnswersIncludingSubAnswers(Pageable pageable){
-////        return answerRepository.findAll(pageable);
-//        int i=0;
-//       List<Object>  o= answerRepository.findAll(pageable)
-//
-//                .stream()
-//
-//                .map(s -> {
-//
-//                    List<Object> l=new ArrayList<>();
-//                    l.add(s.getImage());
-//                    l.add(s.getContent());
-//                    l.add(s.getUser().getFirstName());
-//                    l.add(s.getUser().getLastName());
-//
-//
-//                    return l;
-//                }).collect(Collectors.toList());
-//       return o;
-//    }
+
 
     private final Answers findAnswers(Long id)
     {

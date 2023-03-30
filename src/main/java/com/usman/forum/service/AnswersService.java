@@ -22,5 +22,5 @@ public interface AnswersService {
 
     void bestAnswer(Long id,Long questionId);
 
-//    List<Object>  getAllAnswersIncludingSubAnswers(Pageable pageable);
+
 }

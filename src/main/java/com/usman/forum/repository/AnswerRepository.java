@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+import java.util.Optional;
 
 
 @Repository
@@ -20,4 +20,6 @@ public interface AnswerRepository extends JpaRepository<Answers,Long> {
     @Query("from Answers  a  where a.question.Id=:id")
     List<Answers> findAllAnswersByQuestionID(@Param("id") Long id);
 
+    @Query("from Answers  a where a.question.Id=:questionId and a.user.Id=:userId")
+    Optional<Answers> findAnswerByQuestionAndUser(@Param("questionId")Long questionId , @Param("userId")Long userId);
 }
