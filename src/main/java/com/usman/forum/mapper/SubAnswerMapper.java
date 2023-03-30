@@ -1,7 +1,7 @@
 package com.usman.forum.mapper;
 
 import com.usman.forum.dto.SubAnswerDto;
-import com.usman.forum.model.Answers;
+
 import com.usman.forum.model.SubAnswers;
 import org.mapstruct.Mapper;
 

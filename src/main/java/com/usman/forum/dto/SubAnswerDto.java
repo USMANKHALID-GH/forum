@@ -1,7 +1,8 @@
 package com.usman.forum.dto;
 
 
-import com.usman.forum.model.Answers;
+
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,6 @@ import java.time.LocalDateTime;
 public class SubAnswerDto extends  BaseDto {
     private String content;
     private String image;
-    private Answers answer;
+
     private LocalDateTime createdDate;
 }

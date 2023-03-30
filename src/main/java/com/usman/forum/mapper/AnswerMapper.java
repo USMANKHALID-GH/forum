@@ -9,4 +9,6 @@ public interface AnswerMapper  extends EntityMapper<AnswerDto, Answers> {
 
     AnswerDto toDto( Answers answers);
     Answers toEntity(AnswerDto answerDto);
+
+
 }
