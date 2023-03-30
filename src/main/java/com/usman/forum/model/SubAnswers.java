@@ -18,6 +18,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicInsert
 @DynamicUpdate
 @EqualsAndHashCode(callSuper = true)
+@Table(name = "sub_answer_tbl")
 public class SubAnswers extends AbstractModel {
     private static final long serialVersionUID=1L;
     @Id
@@ -29,7 +30,7 @@ public class SubAnswers extends AbstractModel {
     @NotNull(message = "write your answers")
     private String content;
     private String image;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Answers answer;
 
 
