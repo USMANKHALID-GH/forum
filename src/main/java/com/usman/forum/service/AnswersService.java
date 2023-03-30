@@ -17,4 +17,10 @@ public interface AnswersService {
     Answers findAnswer(Long id);
 
     List<Answers> searchForAnswersByQuestion(Pageable pageable, String saerch);
+
+    void deleteAnswer(Long id,Long questionId);
+
+    void bestAnswer(Long id,Long questionId);
+
+//    List<Object>  getAllAnswersIncludingSubAnswers(Pageable pageable);
 }
