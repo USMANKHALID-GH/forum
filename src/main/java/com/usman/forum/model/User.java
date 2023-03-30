@@ -2,6 +2,8 @@ package com.usman.forum.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +20,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicInsert
 @DynamicUpdate
 @EqualsAndHashCode(callSuper = true)
+@Table(name = "user_tbl")
 public class User extends AbstractModel{
 
     private static final long serialVersionUID=1L;
@@ -38,10 +41,5 @@ public class User extends AbstractModel{
     private String phoneNumber;
 
 
-////    naming ? relations
-//    @OneToOne(mappedBy = "user")
-//    private Comments comments;
-//
-//    @OneToMany(mappedBy = "user")
-//    private List<Question> questions;
+
 }

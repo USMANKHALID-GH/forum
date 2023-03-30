@@ -20,6 +20,7 @@ import java.util.List;
 @DynamicInsert
 @DynamicUpdate
 @EqualsAndHashCode(callSuper = true)
+@Table(name = "question_tbl")
 public class Questions extends AbstractModel {
     private static final long serialVersionUID=1L;
     @Id

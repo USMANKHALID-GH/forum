@@ -19,6 +19,7 @@ import java.util.List;
 @DynamicInsert
 @DynamicUpdate
 @EqualsAndHashCode(callSuper = true)
+@Table(name = "answer_tbl")
 public class Answers  extends AbstractModel{
 
     private static final long serialVersionUID=1L;
@@ -36,7 +37,7 @@ public class Answers  extends AbstractModel{
     @ManyToOne
     @JoinColumn(name = "question_id" ,nullable = false)
     private Questions question;
-    @OneToMany(mappedBy = "answer",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "answer",cascade = CascadeType.REMOVE)
     private List<SubAnswers> subAnswers;
     private  boolean bestAnswer;
 
