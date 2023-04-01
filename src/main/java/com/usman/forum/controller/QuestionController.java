@@ -47,16 +47,16 @@ public class QuestionController {
     }
 
     @DeleteMapping("/{question_id}")
-    public ResponseEntity<BaseResponseDto> deleteQuestion(@PathVariable("question_id") Long questionId ){
+    public ResponseEntity<BaseResponseDto> deleteQuestion(@RequestHeader("userID")Long userID ,@PathVariable("question_id") Long questionId ){
 
-        service.deleteQuestion(questionId);
+        service.deleteQuestion(userID, questionId);
         return  ResponseEntity.ok(new BaseResponseDto().builder().message("Question deleted successfully").build());
     }
 
     @PutMapping("/{question_id}")
-    public ResponseEntity<BaseResponseDto> updateQuestion(@PathVariable("question_id") Long questionId, @RequestBody QuestionDto questionDto){
+    public ResponseEntity<BaseResponseDto> updateQuestion(@RequestHeader("userID")Long userID , @PathVariable("question_id") Long questionId, @RequestBody QuestionDto questionDto){
 
-        service.updateQuestion(questionId,mapper.toEntity(questionDto));
+        service.updateQuestion(questionId,userID ,mapper.toEntity(questionDto));
         return  ResponseEntity.ok(new BaseResponseDto().builder().message("Question updated successfully").build());
     }
 

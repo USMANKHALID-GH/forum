@@ -6,6 +6,7 @@ import com.usman.forum.model.User;
 import com.usman.forum.repository.QuestionRepository;
 import com.usman.forum.repository.UserRepository;
 import com.usman.forum.service.QuestionService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -45,8 +46,10 @@ public class QuestionImpl implements QuestionService {
         return questionRepository.findQuestionByTitleContaining(search,pageable);
     }
 
+//    to be checked
     @Override
-    public void deleteQuestion(Long questionId) {
+    public void deleteQuestion(Long userID ,Long questionId) {
+        findUser(userID);
         Questions questions =findQuestion(questionId);
         questionRepository.delete(questions);
     }
@@ -56,8 +59,10 @@ public class QuestionImpl implements QuestionService {
         return findQuestion(id);
     }
 
+    //    to be checked
     @Override
-    public void updateQuestion(Long questionId, Questions toEntity) {
+    public void updateQuestion(Long questionId ,Long userID ,  Questions toEntity) {
+        findUser(userID);
         Questions questions =findQuestion(questionId);
 
         if(!(toEntity.getTitle().isEmpty()  ||toEntity.getTitle()==null)){
