@@ -32,16 +32,17 @@ public class Questions extends AbstractModel {
     private String content;
     private String image;
 
+    @Column(columnDefinition = "boolean default false")
     private boolean isAnswered;
-
-
-
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+
     private List<Answers> answer;
 
-
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "catergory_id", nullable = false)
+   private Category category;
 }

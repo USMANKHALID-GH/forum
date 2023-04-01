@@ -1,11 +1,10 @@
 package com.usman.forum.controller;
 
 
-import com.usman.forum.dto.AnswerDto;
-import com.usman.forum.dto.BaseResponseDto;
-import com.usman.forum.dto.SubAnswerDto;
-import com.usman.forum.dto.UserDto;
+import com.usman.forum.dto.*;
+import com.usman.forum.mapper.QuestionMapper;
 import com.usman.forum.mapper.SubAnswerMapper;
+import com.usman.forum.model.Questions;
 import com.usman.forum.service.SubAnswerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,13 +22,14 @@ import java.util.Map;
 @RequestMapping("/api/subanswer/")
 public class SubAnswerController {
 
-    private final SubAnswerService service;
-    private final SubAnswerMapper mapper;
+            private final SubAnswerService service;
+            private final SubAnswerMapper mapper;
+            private  final QuestionMapper questionMapper;
 
 
 
-    @GetMapping("/")
-    public  ResponseEntity<Page<SubAnswerDto>>  findAllSubAnswer(Pageable pageable){
+            @GetMapping("/")
+            public  ResponseEntity<Page<SubAnswerDto>>  findAllSubAnswer(Pageable pageable){
         return  ResponseEntity.ok(new PageImpl<>( mapper.toDto(service.findAllSubAnswer(pageable).getContent())));
 
     }
@@ -43,8 +43,8 @@ public class SubAnswerController {
 
     @PostMapping("/")
     public ResponseEntity<BaseResponseDto> saveSubAnswer(@RequestHeader Map<String, String> params, @RequestBody SubAnswerDto subAnswerDtoDto){
-       log.info(params.get("userid")+"======================");
-       log.info(params.get("answerid")+"111111111111111111");
+        log.info(params.get("userid")+"======================");
+        log.info(params.get("answerid")+"111111111111111111");
         Long userid=Long.parseLong(params.get("userid"));
         Long questionId=Long.parseLong(params.get("answerid"));
         service.saveSubAnswer(mapper.toEntity(subAnswerDtoDto),userid,questionId);
@@ -52,21 +52,25 @@ public class SubAnswerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BaseResponseDto> updateSubAnswer(@PathVariable("id")Long id, @RequestBody SubAnswerDto subAnswerDtoDto){
+    public ResponseEntity<BaseResponseDto> updateSubAnswer(@RequestHeader("userId") Long userId,@PathVariable("id")Long id, @RequestBody SubAnswerDto subAnswerDtoDto){
 
-        service.updateSubAnswer(mapper.toEntity(subAnswerDtoDto),id);
+        service.updateSubAnswer(userId,mapper.toEntity(subAnswerDtoDto),id);
         return ResponseEntity.ok(BaseResponseDto.builder().message("SubAnswer updated successfully").build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<BaseResponseDto> unSelectSubAnswer(@PathVariable("id") Long id){
+    public ResponseEntity<BaseResponseDto> unSelectSubAnswer(@RequestHeader("userId") Long userId,@PathVariable("id") Long id){
 
-        service.deleteSubAnswer(id);
+        service.deleteSubAnswer(userId,id);
         return ResponseEntity.ok(BaseResponseDto.builder().message("subAnswer deleted successfully").build());
 
     }
 
+    @GetMapping("/{search}/searching" )
+            public  ResponseEntity<Page<QuestionDto>>  findAllSubAnswer(@PathVariable("search") String search, Pageable pageable){
+        return  ResponseEntity.ok(new PageImpl<>( questionMapper.toDto(service.searchAllInQuestionOrAnswersOrSubAnswer(search,pageable).getContent())));
+
+    }
 
 
-
-}
+            }

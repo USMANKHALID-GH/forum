@@ -15,9 +15,9 @@ public interface QuestionService {
 
     Page<Questions> findAllQuestion1(Pageable pageable, String search);
 
-    void deleteQuestion(Long questionId);
+    void deleteQuestion(Long userID ,Long questionId);
 
     Questions findAQuestion(Long id);
 
-    void updateQuestion(Long questionId, Questions toEntity);
+    void updateQuestion(Long questionId,Long userID , Questions toEntity);
 }

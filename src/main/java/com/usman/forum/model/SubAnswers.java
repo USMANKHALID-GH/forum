@@ -33,6 +33,9 @@ public class SubAnswers extends AbstractModel {
     @ManyToOne
     private Answers answer;
 
+    @Embedded
+    private Likes likes;
+
 
 
 
