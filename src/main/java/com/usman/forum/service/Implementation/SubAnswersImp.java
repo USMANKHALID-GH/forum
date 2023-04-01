@@ -2,6 +2,7 @@ package com.usman.forum.service.Implementation;
 
 import com.usman.forum.exception.BusinessException;
 import com.usman.forum.model.Answers;
+import com.usman.forum.model.Questions;
 import com.usman.forum.model.SubAnswers;
 import com.usman.forum.model.User;
 import com.usman.forum.repository.AnswerRepository;
@@ -16,7 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Validated
 @Service
@@ -46,7 +49,8 @@ public class SubAnswersImp implements SubAnswerService {
     }
 
     @Override
-    public void updateSubAnswer(SubAnswers toEntity, Long id) {
+    public void updateSubAnswer(Long userId,SubAnswers toEntity, Long id) {
+        findUserByID(userId);
         SubAnswers subAnswers= findSubAnswerById(id);
         if(!(toEntity.getContent().isEmpty()  ||toEntity.getContent()==null)){
             subAnswers.setContent(toEntity.getContent());
@@ -60,7 +64,8 @@ public class SubAnswersImp implements SubAnswerService {
     }
 
     @Override
-    public void deleteSubAnswer(Long id) {
+    public void deleteSubAnswer(Long userId,Long id) {
+        findUserByID(userId);
         subAnswerRepository.delete(findSubAnswerById(id));
     }
 
@@ -74,8 +79,18 @@ public class SubAnswersImp implements SubAnswerService {
         return findSubAnswerById(id);
     }
 
+    @Override
+    public Page<Questions> searchAllInQuestionOrAnswersOrSubAnswer(String search, Pageable pageable) {
+        return subAnswerRepository.searchAllInQuestionOrAnswersOrSubAnswers(search, pageable);
+    }
     private SubAnswers findSubAnswerById(Long id){
         return subAnswerRepository.findById(id)
                 .orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND,"There is no such Id: "+id));
+    }
+
+    private User findUserByID(Long id){
+        User user= userRepository.findById(id).
+                orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND, "There is  not such Id in our System: "+id));
+        return user;
     }
 }

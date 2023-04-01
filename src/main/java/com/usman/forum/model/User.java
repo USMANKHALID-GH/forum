@@ -30,7 +30,8 @@ public class User extends AbstractModel{
 
     @Column(nullable = false)
     private String firstName;
-    private String LastName;
+    @Column(nullable = false)
+    private String lastName;
     private String relatedField;
     @NotBlank
     @Email(message = "email must be provided")
@@ -39,6 +40,8 @@ public class User extends AbstractModel{
     @NotBlank
     @Column(unique = true,nullable = false)
     private String phoneNumber;
+    private String password;
+
 
 
 

@@ -1,5 +1,6 @@
 package com.usman.forum.service.Implementation;
 
+import com.usman.forum.Config;
 import com.usman.forum.exception.BusinessException;
 import com.usman.forum.model.User;
 import com.usman.forum.repository.UserRepository;
@@ -7,6 +8,7 @@ import com.usman.forum.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,12 +18,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserImp implements UserService {
 
     private final UserRepository userRepository;
+    private Config config;
 
     @Override
     public void saveUser(@Valid User user) {
+
+        user.setPassword((config.passwordEncryptor().encrypt(user.getPassword())));
         userRepository.save(user);
 
     }
@@ -69,4 +75,6 @@ public class UserImp implements UserService {
                  orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND, "There is  not such Id in our System: "+id));
          return user;
      }
+
+
 }
