@@ -18,9 +18,9 @@ public interface AnswersService {
 
     List<Answers> searchForAnswersByQuestion(Pageable pageable, String saerch);
 
-    void deleteAnswer(Long id,Long questionId);
+    void deleteAnswer( Long userID, Long id,Long questionId);
 
-    void bestAnswer(Long id,Long questionId);
+    void bestAnswer(Long userID,Long id,Long questionId);
 
 
 }

@@ -47,10 +47,11 @@ public class AnswerImp  implements AnswersService {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "You have already " +
                     "answered this question Update or delete the previous answer");
         }
+
         question.setAnswered(true);
-        answers.setUser(user);
+         answers.setUser(user);
         answers.setQuestion(question);
-        questionRepository.save(question);
+
         answerRepository.save(answers);
 
     }
@@ -74,17 +75,18 @@ public class AnswerImp  implements AnswersService {
                 .collect(Collectors.toList());
     }
 
+
     @Override
-    public void deleteAnswer(Long id, Long questionId) {
+    public void deleteAnswer(Long userID,Long id, Long questionId) {
+        findUserByID(userID);
         Answers answer=findAnswer(id);
         Long isAnswered=answerRepository.numberOfAnsweredQuestion(questionId);
-        log.info(isAnswered+"numberofAnswered==========================");
+
         if(isAnswered==1){
             Questions question=questionRepository.findById(questionId).get();
             answerRepository.delete(answer);
             question.setAnswered(false);
             questionRepository.save(question);
-            log.info("inside if statement--------------------");
             return;
         }
         else
@@ -93,7 +95,8 @@ public class AnswerImp  implements AnswersService {
     }
 
     @Override
-    public void bestAnswer(Long id, Long questionId) {
+    public void bestAnswer(Long userID,Long id, Long questionId) {
+        User user=findUserByID(userID);
         Answers answer=findAnswers(id);
         List<Answers> answersByQuestionID =answerRepository.findAllAnswersByQuestionID(questionId)
                 .stream()
@@ -102,6 +105,7 @@ public class AnswerImp  implements AnswersService {
             a.setBestAnswer(false);
             answerRepository.save(a);
         }
+        answer.setUser(user);
         answer.setBestAnswer(true);
         answerRepository.save(answer);
     }
@@ -114,5 +118,11 @@ public class AnswerImp  implements AnswersService {
         Answers answers= answerRepository.findById(id).
                 orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND, "There is  not such Id in our System: "+id));
         return answers;
+    }
+
+    private User findUserByID(Long id){
+        User user= userRepository.findById(id).
+                orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND, "There is  not such Id in our System: "+id));
+        return user;
     }
 }

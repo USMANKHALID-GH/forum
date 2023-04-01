@@ -61,19 +61,19 @@ public class AnswerController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<BaseResponseDto> deleteAnswer(@PathVariable("id") Long id ,@RequestHeader(name = "questionId") Long questionId){
+    public ResponseEntity<BaseResponseDto> deleteAnswer(@RequestHeader("userId") Long userId,@PathVariable("id") Long id ,@RequestHeader(name = "questionId") Long questionId){
 
-        service.deleteAnswer(id,questionId);
+        service.deleteAnswer(userId,id,questionId);
         return ResponseEntity.ok(BaseResponseDto.builder().message("Answer deleted successfully").build());
 
     }
 
 
     @PostMapping("/{id}/best_answer")
-    public ResponseEntity<BaseResponseDto> bestAnswer(@PathVariable("id") Long id,@RequestHeader(name = "questionId") Long questionId ){
+    public ResponseEntity<BaseResponseDto> bestAnswer(@RequestHeader("userId") Long userId, @PathVariable("id") Long id,@RequestHeader(name = "questionId") Long questionId ){
 
-        service.bestAnswer(id,questionId);
-        return ResponseEntity.ok(BaseResponseDto.builder().message("Answer deleted successfully").build());
+        service.bestAnswer(userId,id,questionId);
+        return ResponseEntity.ok(BaseResponseDto.builder().message("best Answered Selected  successfully").build());
 
     }
 

@@ -42,5 +42,11 @@ public class Answers  extends AbstractModel{
     private  boolean bestAnswer;
 
 
+    @Embedded
+    private Likes likes;
+
+
+
+
 
 }
