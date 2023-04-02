@@ -42,8 +42,8 @@ public class Answers  extends AbstractModel{
     private  boolean bestAnswer;
 
 
-    @Embedded
-    private Likes likes;
+    @Column(columnDefinition = "integer default 0")
+    private  Integer likeCount= 0;
 
 
 
