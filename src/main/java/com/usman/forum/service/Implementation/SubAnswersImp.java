@@ -1,11 +1,9 @@
 package com.usman.forum.service.Implementation;
 
 import com.usman.forum.exception.BusinessException;
-import com.usman.forum.model.Answers;
-import com.usman.forum.model.Questions;
-import com.usman.forum.model.SubAnswers;
-import com.usman.forum.model.User;
+import com.usman.forum.model.*;
 import com.usman.forum.repository.AnswerRepository;
+import com.usman.forum.repository.LikesReposiory;
 import com.usman.forum.repository.SubAnswerRepository;
 import com.usman.forum.repository.UserRepository;
 import com.usman.forum.service.SubAnswerService;
@@ -17,9 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.List;
+
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Validated
 @Service
@@ -27,16 +25,18 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SubAnswersImp implements SubAnswerService {
     private final SubAnswerRepository subAnswerRepository;
-    private final UserRepository userRepository;
-    private final AnswerRepository answerRepository;
+    private final  UserImp userImp;
+    private  final  AnswerImp answerImp;
+    private  final LikesReposiory likesReposiory;
 
     @Override
     public void saveSubAnswer(SubAnswers subAnswers, Long userid, Long answerId) {
-        User user=userRepository.findById(userid).get();
-        Answers answer=answerRepository.findById(answerId).get();
+        User user=userImp.findUser(userid);
+
+        Answers answer=answerImp.findAnswer(answerId);
 
         Optional<SubAnswers> alreadyAnswered= subAnswerRepository.findSubAnswerByQuestionAndUser(answerId,userid);
-        log.info("///////////////////////////..............................");
+
         if( alreadyAnswered.isPresent()){
             throw new BusinessException(HttpStatus.BAD_REQUEST, "You have already " +
                     "answered this question Update or delete the previous answer");
@@ -50,23 +50,33 @@ public class SubAnswersImp implements SubAnswerService {
 
     @Override
     public void updateSubAnswer(Long userId,SubAnswers toEntity, Long id) {
-        findUserByID(userId);
+        User user=userImp.findUser(userId);
+
         SubAnswers subAnswers= findSubAnswerById(id);
-        if(!(toEntity.getContent().isEmpty()  ||toEntity.getContent()==null)){
-            subAnswers.setContent(toEntity.getContent());
-        }
-        if(!(toEntity.getImage().isEmpty()  || toEntity.getImage()==null)){
-            subAnswers.setImage(toEntity.getImage());
-        }
+        if(user.equals(subAnswers.getUser())) {
+            if (!(toEntity.getContent().isEmpty() || toEntity.getContent() == null)) {
+                subAnswers.setContent(toEntity.getContent());
+            }
+            if (!(toEntity.getImage().isEmpty() || toEntity.getImage() == null)) {
+                subAnswers.setImage(toEntity.getImage());
+            }
 
-        subAnswerRepository.save(subAnswers);
-
+            subAnswerRepository.save(subAnswers);
+        }
+        else{
+            throw  new BusinessException(HttpStatus.FORBIDDEN, "You have no permission to update this");
+        }
     }
 
     @Override
     public void deleteSubAnswer(Long userId,Long id) {
-        findUserByID(userId);
-        subAnswerRepository.delete(findSubAnswerById(id));
+        User user=userImp.findUser(userId);
+        SubAnswers subAnswers=findSubAnswer(id);
+        if(user.equals(subAnswers.getUser())){
+        subAnswerRepository.delete(subAnswers);}
+        else{
+            throw  new BusinessException(HttpStatus.FORBIDDEN, "You have no permission to delete this");
+        }
     }
 
     @Override
@@ -76,7 +86,8 @@ public class SubAnswersImp implements SubAnswerService {
 
     @Override
     public SubAnswers findSubAnswer(Long id) {
-        return findSubAnswerById(id);
+        return subAnswerRepository.findById(id)
+                .orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND,"There is no such Id: "+id));
     }
 
     @Override
@@ -88,9 +99,35 @@ public class SubAnswersImp implements SubAnswerService {
                 .orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND,"There is no such Id: "+id));
     }
 
-    private User findUserByID(Long id){
-        User user= userRepository.findById(id).
-                orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND, "There is  not such Id in our System: "+id));
-        return user;
+    @Override
+    public String likeUnlikeAnswer(Long userI, Long answerId) {
+        SubAnswers answers= findSubAnswer(answerId);
+        userImp.findUser(userI);
+        Optional<Likes> likes=likesReposiory.findLikeByAnmswerAndUser(answerId,userI);
+
+        if( likes.isPresent()){
+            likes.get().setUser(userI);
+            likes.get().setAnswer(answerId);
+
+            int increaseLike = answers.getLikeCount() - 1;
+            answers.setLikeCount(increaseLike);
+            likesReposiory.delete(likes.get());
+            subAnswerRepository.save(answers);
+            return "unliked";
+        }
+
+        Likes newLike = new Likes();
+        newLike.setUser(userI);
+        newLike.setAnswer(answerId);
+
+        int increaseLike = answers.getLikeCount() + 1;
+        answers.setLikeCount(increaseLike);
+        likesReposiory.save(newLike);
+        subAnswerRepository.save(answers);
+
+        return  "liked";
+
     }
+
+
 }

@@ -33,8 +33,8 @@ public class SubAnswers extends AbstractModel {
     @ManyToOne
     private Answers answer;
 
-    @Embedded
-    private Likes likes;
+    @Column(columnDefinition = "integer default 0")
+    private  Integer likeCount= 0;
 
 
 

@@ -22,9 +22,10 @@ import org.springframework.validation.annotation.Validated;
 public class QuestionImpl implements QuestionService {
     private final QuestionRepository questionRepository;
     private  final UserRepository userRepository;
+    private final  UserImp userImp;
     @Override
     public void saveQuestion(Long userId, Questions questions) {
-        User user = findUser(userId);
+        User user = userImp.findUser(userId);
         questions.setAnswered(false);
         questions.setUser(user);
         questionRepository.save(questions);
@@ -49,45 +50,46 @@ public class QuestionImpl implements QuestionService {
 //    to be checked
     @Override
     public void deleteQuestion(Long userID ,Long questionId) {
-        findUser(userID);
-        Questions questions =findQuestion(questionId);
-        questionRepository.delete(questions);
+        User user=userImp.findUser(userID);
+        Questions questions =findAQuestion(questionId);
+        if(user.equals(questions.getUser()))
+        {
+        questionRepository.delete(questions);}
+        else {
+            throw  new BusinessException(HttpStatus.FORBIDDEN, "You have no permission to delete this");
+        }
     }
 
     @Override
     public Questions findAQuestion(Long id) {
-        return findQuestion(id);
+        return questionRepository.findById(id).
+                orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND, "There is  not such Id in our System: "+id));
     }
 
-    //    to be checked
+
     @Override
     public void updateQuestion(Long questionId ,Long userID ,  Questions toEntity) {
-        findUser(userID);
-        Questions questions =findQuestion(questionId);
-
-        if(!(toEntity.getTitle().isEmpty()  ||toEntity.getTitle()==null)){
-            questions.setTitle(toEntity.getTitle());
+        User user=userImp.findUser(userID);
+        Questions questions =findAQuestion(questionId);
+        if(user.equals(questions.getUser())) {
+            if (!(toEntity.getTitle().isEmpty() || toEntity.getTitle() == null)) {
+                questions.setTitle(toEntity.getTitle());
+            }
+            if (!(toEntity.getImage().isEmpty() || toEntity.getImage() == null)) {
+                questions.setImage(toEntity.getImage());
+            }
+            if (!(toEntity.getContent().isEmpty() || toEntity.getContent() == null)) {
+                questions.setContent(toEntity.getContent());
+            }
+            questionRepository.save(questions);
         }
-        if(!(toEntity.getImage().isEmpty()  || toEntity.getImage()==null)){
-            questions.setImage(toEntity.getImage());
+        else {
+            throw  new BusinessException(HttpStatus.FORBIDDEN, "You have no permission to delete this");
         }
-        if(!(toEntity.getContent().isEmpty()  || toEntity.getContent()==null)){
-            questions.setContent(toEntity.getContent());
-        }
-       questionRepository.save(questions);
     }
 
 
-    private  final User findUser(Long id){
-        User user= userRepository.findById(id).
-                orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND, "There is  not such Id in our System: "+id));
-        return user;
-    }
 
-    private final Questions findQuestion(Long id)
-    {
-        Questions questions = questionRepository.findById(id).
-                orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND, "There is  not such Id in our System: "+id));
-        return questions;
-    }
+
+
 }

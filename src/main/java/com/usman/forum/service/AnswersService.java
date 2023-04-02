@@ -23,4 +23,5 @@ public interface AnswersService {
     void bestAnswer(Long userID,Long id,Long questionId);
 
 
+    String likeAnswer(Long userI, Long questionId);
 }

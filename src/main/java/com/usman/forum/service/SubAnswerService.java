@@ -19,4 +19,6 @@ public interface SubAnswerService {
 
     SubAnswers findSubAnswer(Long id);
     Page<Questions> searchAllInQuestionOrAnswersOrSubAnswer( String search, Pageable pageable);
+
+    String likeUnlikeAnswer(Long userI, Long id);
 }

@@ -34,7 +34,7 @@ public class UserImp implements UserService {
 
     @Override
     public void updateUser(Long id, @Valid User user) {
-        User user1=findUserByID(id);
+        User user1=findUser(id);
         if(!(user.getRelatedField().isEmpty()  || user.getRelatedField()==null)){
             user1.setRelatedField(user.getRelatedField());
         }
@@ -55,26 +55,19 @@ public class UserImp implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-        User user=findUserByID(id);
+        User user=findUser(id);
         userRepository.delete(user);
     }
 
     @Override
     public User findUser(Long id) {
-        return findUserByID(id);
+        return userRepository.findById(id).
+                orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND, "There is  not such Id in our System: "+id));
     }
 
     @Override
     public Page<User> findAllUser(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
-
-
-    private User findUserByID(Long id){
-         User user= userRepository.findById(id).
-                 orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND, "There is  not such Id in our System: "+id));
-         return user;
-     }
-
 
 }
