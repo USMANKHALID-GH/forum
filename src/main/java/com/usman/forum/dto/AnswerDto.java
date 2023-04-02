@@ -22,4 +22,5 @@ public class AnswerDto extends BaseDto {
     private String image;
     private LocalDateTime createdDate;
     private List<SubAnswerDto> subAnswers;
+    private  Integer likeCount;
 }

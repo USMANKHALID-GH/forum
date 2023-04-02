@@ -19,4 +19,6 @@ public class SubAnswerDto extends  BaseDto {
     private String image;
 
     private LocalDateTime createdDate;
+    private  Integer likeCount;
+
 }
