@@ -76,6 +76,11 @@ public class AnswerController {
         return ResponseEntity.ok(BaseResponseDto.builder().message("best Answered Selected  successfully").build());
 
     }
+    @PostMapping("{id}/like")
+    public ResponseEntity<BaseResponseDto> likeUnlikeAnAnswer(@RequestHeader("userID") Long userI ,@PathVariable("id") Long id){
+        String liked_unliked=service.likeAnswer(userI,id);
+        return ResponseEntity.ok(BaseResponseDto.builder().message("Answer is "+liked_unliked+"  successfully").build());
+    }
 
 
 

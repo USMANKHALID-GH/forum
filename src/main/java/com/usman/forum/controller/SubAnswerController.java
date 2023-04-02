@@ -26,13 +26,11 @@ public class SubAnswerController {
             private final SubAnswerMapper mapper;
             private  final QuestionMapper questionMapper;
 
-
-
             @GetMapping("/")
-            public  ResponseEntity<Page<SubAnswerDto>>  findAllSubAnswer(Pageable pageable){
-        return  ResponseEntity.ok(new PageImpl<>( mapper.toDto(service.findAllSubAnswer(pageable).getContent())));
 
-    }
+            public  ResponseEntity<Page<SubAnswerDto>>  findAllSubAnswer(Pageable pageable){
+                return  ResponseEntity.ok(new PageImpl<>( mapper.toDto(service.findAllSubAnswer(pageable).getContent())));
+            }
 
 
     @GetMapping("/{id}")
@@ -71,6 +69,13 @@ public class SubAnswerController {
         return  ResponseEntity.ok(new PageImpl<>( questionMapper.toDto(service.searchAllInQuestionOrAnswersOrSubAnswer(search,pageable).getContent())));
 
     }
+    @PostMapping("{id}/like")
+    public ResponseEntity<BaseResponseDto> likeUnlikeAnAnswer(@RequestHeader("userID") Long userI ,@PathVariable("id") Long id){
+        String liked_unliked=service.likeUnlikeAnswer(userI,id);
+        return ResponseEntity.ok(BaseResponseDto.builder().message("Answer is "+liked_unliked+"  successfully").build());
+    }
 
 
-            }
+
+
+}
