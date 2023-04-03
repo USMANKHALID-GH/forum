@@ -4,7 +4,7 @@ import com.usman.forum.exception.BusinessException;
 import com.usman.forum.model.Questions;
 import com.usman.forum.model.User;
 import com.usman.forum.repository.QuestionRepository;
-import com.usman.forum.repository.UserRepository;
+
 import com.usman.forum.service.QuestionService;
 
 import lombok.AllArgsConstructor;

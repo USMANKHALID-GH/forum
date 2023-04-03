@@ -132,6 +132,7 @@ public class AnswerImp  implements AnswersService {
 
     public  <T extends JpaRepository> String likeAndUnLikeQuestionOrAnswer(Long userid, Long id, T repository)  {
         Answers answers= findAnswer(id);
+        log.info("===========================================1");
         User user=userImp.findUser(userid);
         Optional<Likes> likes=likesReposiory.findLikeByAnmswerAndUser(id,userid);
         if( likes.isPresent()){

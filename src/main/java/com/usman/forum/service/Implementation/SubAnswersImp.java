@@ -2,31 +2,32 @@ package com.usman.forum.service.Implementation;
 
 import com.usman.forum.exception.BusinessException;
 import com.usman.forum.model.*;
-import com.usman.forum.repository.AnswerRepository;
 import com.usman.forum.repository.LikesReposiory;
 import com.usman.forum.repository.SubAnswerRepository;
-import com.usman.forum.repository.UserRepository;
 import com.usman.forum.service.SubAnswerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 
 import java.util.Optional;
+import java.util.function.Function;
 
 
 @Validated
 @Service
 @AllArgsConstructor
 @Slf4j
-public class SubAnswersImp implements SubAnswerService {
+public class SubAnswersImp implements SubAnswerService{
     private final SubAnswerRepository subAnswerRepository;
     private final  UserImp userImp;
     private  final  AnswerImp answerImp;
+    private  final LikesReposiory likesReposiory;
 
 
     @Override
@@ -101,8 +102,41 @@ public class SubAnswersImp implements SubAnswerService {
 
     @Override
     public String likeUnlikeAnswer(Long userI, Long answerId) {
-        return answerImp.likeAndUnLikeQuestionOrAnswer(userI,answerId,subAnswerRepository);
 
+
+        return likeAndUnLikeQuestionOrAnswer(userI,answerId,subAnswerRepository);
+
+    }
+
+    public  <T extends JpaRepository> String likeAndUnLikeQuestionOrAnswer(Long userid, Long id, T repository)  {
+
+
+        SubAnswers answers=findSubAnswer(id);
+
+
+        User user=userImp.findUser(userid);
+        Optional<Likes> likes=likesReposiory.findLikeByAnmswerAndUser(id,userid);
+        if( likes.isPresent()){
+            likes.get().setUser(user.getId());
+            likes.get().setAnswer(answers.getId());
+
+            int increaseLike = answers.getLikeCount() - 1;
+            answers.setLikeCount(increaseLike);
+            likesReposiory.delete(likes.get());
+            repository.save(answers);
+            return "unliked";
+        }
+
+        Likes newLike = new Likes();
+        newLike.setUser(user.getId());
+        newLike.setAnswer(answers.getId());
+
+        int increaseLike = answers.getLikeCount() + 1;
+        answers.setLikeCount(increaseLike);
+        likesReposiory.save(newLike);
+        repository.save(answers);
+
+        return  "liked";
     }
 
 
