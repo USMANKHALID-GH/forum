@@ -126,31 +126,7 @@ public class AnswerImp  implements AnswersService {
 
  {
      return  likeAndUnLikeQuestionOrAnswer(userI,answerId,answerRepository);
-//        Answers answers= findAnswer(answerId);
-//        User user=userImp.findUser(userI);
-//        Optional<Likes> likes=likesReposiory.findLikeByAnmswerAndUser(answerId,userI);
-//
-//        if( likes.isPresent()){
-//            likes.get().setUser(userI);
-//            likes.get().setAnswer(answerId);
-//
-//            int increaseLike = answers.getLikeCount() - 1;
-//            answers.setLikeCount(increaseLike);
-//            likesReposiory.delete(likes.get());
-//            answerRepository.save(answers);
-//            return "unliked";
-//        }
-//
-//            Likes newLike = new Likes();
-//            newLike.setUser(userI);
-//            newLike.setAnswer(answerId);
-//
-//            int increaseLike = answers.getLikeCount() + 1;
-//            answers.setLikeCount(increaseLike);
-//            likesReposiory.save(newLike);
-//            answerRepository.save(answers);
-//
-//        return  "liked";
+
 
     }
 

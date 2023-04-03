@@ -27,7 +27,7 @@ public class SubAnswersImp implements SubAnswerService {
     private final SubAnswerRepository subAnswerRepository;
     private final  UserImp userImp;
     private  final  AnswerImp answerImp;
-    private  final LikesReposiory likesReposiory;
+
 
     @Override
     public void saveSubAnswer(SubAnswers subAnswers, Long userid, Long answerId) {
@@ -102,32 +102,6 @@ public class SubAnswersImp implements SubAnswerService {
     @Override
     public String likeUnlikeAnswer(Long userI, Long answerId) {
         return answerImp.likeAndUnLikeQuestionOrAnswer(userI,answerId,subAnswerRepository);
-
-//        SubAnswers answers= findSubAnswer(answerId);
-//        userImp.findUser(userI);
-//        Optional<Likes> likes=likesReposiory.findLikeByAnmswerAndUser(answerId,userI);
-//
-//        if( likes.isPresent()){
-//            likes.get().setUser(userI);
-//            likes.get().setAnswer(answerId);
-//
-//            int increaseLike = answers.getLikeCount() - 1;
-//            answers.setLikeCount(increaseLike);
-//            likesReposiory.delete(likes.get());
-//            subAnswerRepository.save(answers);
-//            return "unliked";
-//        }
-//
-//        Likes newLike = new Likes();
-//        newLike.setUser(userI);
-//        newLike.setAnswer(answerId);
-//
-//        int increaseLike = answers.getLikeCount() + 1;
-//        answers.setLikeCount(increaseLike);
-//        likesReposiory.save(newLike);
-//        subAnswerRepository.save(answers);
-//
-//        return  "liked";
 
     }
 
