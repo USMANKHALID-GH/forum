@@ -3,7 +3,7 @@ package com.usman.forum.controller;
 import com.usman.forum.dto.BaseResponseDto;
 import com.usman.forum.dto.QuestionDto;
 import com.usman.forum.mapper.QuestionMapper;
-import com.usman.forum.model.Questions;
+
 import com.usman.forum.service.QuestionService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
