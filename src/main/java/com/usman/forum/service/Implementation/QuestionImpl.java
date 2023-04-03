@@ -6,7 +6,7 @@ import com.usman.forum.model.User;
 import com.usman.forum.repository.QuestionRepository;
 import com.usman.forum.repository.UserRepository;
 import com.usman.forum.service.QuestionService;
-import jakarta.validation.Valid;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,7 +21,7 @@ import org.springframework.validation.annotation.Validated;
 @AllArgsConstructor
 public class QuestionImpl implements QuestionService {
     private final QuestionRepository questionRepository;
-    private  final UserRepository userRepository;
+
     private final  UserImp userImp;
     @Override
     public void saveQuestion(Long userId, Questions questions) {

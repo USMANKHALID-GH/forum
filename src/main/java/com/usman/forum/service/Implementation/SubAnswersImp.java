@@ -101,31 +101,33 @@ public class SubAnswersImp implements SubAnswerService {
 
     @Override
     public String likeUnlikeAnswer(Long userI, Long answerId) {
-        SubAnswers answers= findSubAnswer(answerId);
-        userImp.findUser(userI);
-        Optional<Likes> likes=likesReposiory.findLikeByAnmswerAndUser(answerId,userI);
+        return answerImp.likeAndUnLikeQuestionOrAnswer(userI,answerId,subAnswerRepository);
 
-        if( likes.isPresent()){
-            likes.get().setUser(userI);
-            likes.get().setAnswer(answerId);
-
-            int increaseLike = answers.getLikeCount() - 1;
-            answers.setLikeCount(increaseLike);
-            likesReposiory.delete(likes.get());
-            subAnswerRepository.save(answers);
-            return "unliked";
-        }
-
-        Likes newLike = new Likes();
-        newLike.setUser(userI);
-        newLike.setAnswer(answerId);
-
-        int increaseLike = answers.getLikeCount() + 1;
-        answers.setLikeCount(increaseLike);
-        likesReposiory.save(newLike);
-        subAnswerRepository.save(answers);
-
-        return  "liked";
+//        SubAnswers answers= findSubAnswer(answerId);
+//        userImp.findUser(userI);
+//        Optional<Likes> likes=likesReposiory.findLikeByAnmswerAndUser(answerId,userI);
+//
+//        if( likes.isPresent()){
+//            likes.get().setUser(userI);
+//            likes.get().setAnswer(answerId);
+//
+//            int increaseLike = answers.getLikeCount() - 1;
+//            answers.setLikeCount(increaseLike);
+//            likesReposiory.delete(likes.get());
+//            subAnswerRepository.save(answers);
+//            return "unliked";
+//        }
+//
+//        Likes newLike = new Likes();
+//        newLike.setUser(userI);
+//        newLike.setAnswer(answerId);
+//
+//        int increaseLike = answers.getLikeCount() + 1;
+//        answers.setLikeCount(increaseLike);
+//        likesReposiory.save(newLike);
+//        subAnswerRepository.save(answers);
+//
+//        return  "liked";
 
     }
 
