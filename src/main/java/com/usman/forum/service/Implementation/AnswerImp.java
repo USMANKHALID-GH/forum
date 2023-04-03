@@ -112,6 +112,7 @@ public class AnswerImp  implements AnswersService {
         List<Answers> answersByQuestionID =answerRepository.findAllAnswersByQuestionID(questionId)
                 .stream()
                 .filter(s-> s.isBestAnswer()).collect(Collectors.toList());
+        log.equals(answersByQuestionID);
         for(Answers a: answersByQuestionID){
             a.setBestAnswer(false);
             answerRepository.save(a);
@@ -122,9 +123,11 @@ public class AnswerImp  implements AnswersService {
     }
 
     @Override
-    public String likeAnswer(Long userI, Long answerId) {
+    public String likeAnswer(Long userI, Long answerId)
+
+    {
         Answers answers= findAnswer(answerId);
-        userImp.findUser(userI);
+        User user=userImp.findUser(userI);
         Optional<Likes> likes=likesReposiory.findLikeByAnmswerAndUser(answerId,userI);
 
         if( likes.isPresent()){
