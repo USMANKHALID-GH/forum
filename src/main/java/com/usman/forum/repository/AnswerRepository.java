@@ -19,7 +19,7 @@ public interface AnswerRepository extends JpaRepository<Answers,Long> {
     @Query("select count(a.question) from Answers  a  where a.question.Id=:id")
     Long  numberOfAnsweredQuestion(@Param("id") Long id);
 
-    @Query("from Answers  a  where a.question.Id=:id")
+    @Query("select a from Answers  a  where a.question.Id=:id")
     List<Answers> findAllAnswersByQuestionID(@Param("id") Long id);
 
     @Query("from Answers  a where a.question.Id=:questionId and a.user.Id=:userId")
