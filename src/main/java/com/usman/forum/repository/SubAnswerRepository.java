@@ -20,8 +20,11 @@ public interface SubAnswerRepository  extends JpaRepository<SubAnswers, Long> {
     Optional<SubAnswers> findSubAnswerByQuestionAndUser(@Param("answerId")Long answerId, @Param("userId") Long userId);
 
 
-    @Query("select ans.answer.question from   SubAnswers  ans where ans.content=:search or ans.answer.content=:search or ans.answer.question.content=:search")
-    Page<Questions> searchAllInQuestionOrAnswersOrSubAnswers(@Param("search") String search, Pageable pageable);
+//    @Query("select ans.answer.question from   SubAnswers  ans where ans.content=:search or ans.answer.content=:search or ans.answer.question.content=:search")
+//    Page<Questions> searchAllInQuestionOrAnswersOrSubAnswers(@Param("search") String search, Pageable pageable);
 
+
+    @Query("select ans.answer.question from   SubAnswers  ans where ans.content like %:search% or ans.answer.content LIKE %:search% or ans.answer.question.content LIKE %:search%")
+    Page<Questions> searchAllInQuestionOrAnswersOrSubAnswers(@Param("search") String search, Pageable pageable);
 
 }
