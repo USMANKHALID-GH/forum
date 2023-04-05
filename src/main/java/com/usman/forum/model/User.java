@@ -20,7 +20,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicInsert
 @DynamicUpdate
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "user_tbl")
 public class User extends AbstractModel{
 
     private static final long serialVersionUID=1L;
