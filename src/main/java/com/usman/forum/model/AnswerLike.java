@@ -19,20 +19,18 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @EqualsAndHashCode(callSuper = true)
 @Data
-
-public class Likes  extends AbstractModel {
+public class AnswerLike extends AbstractModel {
   private static final long serialVersionUID=1L;
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private  Long id;
 
-
-
-
-  @Column(name="user_id")
-  private Long user;
-  @Column(name = "answer_id")
-  private Long answer;
+  @ManyToOne
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
+  @ManyToOne
+  @JoinColumn(nullable = false)
+  private Answer answer;
 
 
 }

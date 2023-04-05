@@ -1,6 +1,6 @@
 package com.usman.forum.service;
 
-import com.usman.forum.model.Answers;
+import com.usman.forum.model.Answer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -10,18 +10,20 @@ import java.util.List;
 
 public interface AnswersService {
 
-    void saveAnswer(Answers answers , Long uid, Long qid);
+    void saveAnswer(Answer answers , Long uid, Long qid);
 
-    Page<Answers> findAllAnswer(Pageable pageable);
+    Page<Answer> findAllAnswer(Pageable pageable);
 
-    Answers findAnswer(Long id);
+    Answer findAnswer(Long id);
 
-    List<Answers> searchForAnswersByQuestion(Pageable pageable, String saerch);
+    List<Answer> searchForAnswersByQuestion(Pageable pageable, String search);
 
     void deleteAnswer( Long userID, Long id,Long questionId);
 
     void bestAnswer(Long userID,Long id,Long questionId);
 
 
-    String likeAnswer(Long userI, Long questionId);
+    String likeUnlikeAnswer(Long userI, Long answerId);
+
+    Integer answerLikeCount(long id);
 }

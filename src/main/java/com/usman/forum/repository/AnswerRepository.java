@@ -1,9 +1,7 @@
 package com.usman.forum.repository;
 
-import com.usman.forum.model.Answers;
+import com.usman.forum.model.Answer;
 
-import com.usman.forum.model.Questions;
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,16 +12,16 @@ import java.util.Optional;
 
 
 @Repository
-public interface AnswerRepository extends JpaRepository<Answers,Long> {
+public interface AnswerRepository extends JpaRepository<Answer,Long> {
 
-    @Query("select count(a.question) from Answers  a  where a.question.Id=:id")
+    @Query("select count(a.question) from Answer  a  where a.question.Id=:id")
     Long  numberOfAnsweredQuestion(@Param("id") Long id);
 
-    @Query("select a from Answers  a  where a.question.Id=:id")
-    List<Answers> findAllAnswersByQuestionID(@Param("id") Long id);
+    @Query("select a from Answer  a  where a.question.Id=:id")
+    List<Answer> findAllAnswersByQuestionID(@Param("id") Long id);
 
-    @Query("from Answers  a where a.question.Id=:questionId and a.user.Id=:userId")
-    Optional<Answers> findAnswerByQuestionAndUser(@Param("questionId")Long questionId , @Param("userId")Long userId);
+    @Query("from Answer  a where a.question.Id=:questionId and a.user.Id=:userId")
+    Optional<Answer> findAnswerByQuestionAndUser(@Param("questionId")Long questionId , @Param("userId")Long userId);
 
 
 }

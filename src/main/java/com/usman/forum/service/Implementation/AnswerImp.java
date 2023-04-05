@@ -1,13 +1,10 @@
 package com.usman.forum.service.Implementation;
 
 import com.usman.forum.exception.BusinessException;
-import com.usman.forum.model.Answers;
+import com.usman.forum.model.*;
 
-import com.usman.forum.model.Likes;
-import com.usman.forum.model.Questions;
-import com.usman.forum.model.User;
 import com.usman.forum.repository.AnswerRepository;
-import com.usman.forum.repository.LikesReposiory;
+import com.usman.forum.repository.AnswerLikeRepository;
 import com.usman.forum.repository.QuestionRepository;
 
 import com.usman.forum.service.AnswersService;
@@ -17,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -37,17 +33,17 @@ public class AnswerImp  implements AnswersService {
 
     private  final UserImp userImp;
     private  final  QuestionImpl questionImpl;
-    private  final LikesReposiory likesReposiory;
+    private  final AnswerLikeRepository answerLikeRepository;
 
     @Override
-    public void saveAnswer(@Valid Answers answers , Long uid, Long questionid) {
+    public void saveAnswer(@Valid Answer answers , Long uid, Long questionid) {
 
 
         User user=userImp.findUser(uid);
 
-        Questions question =questionImpl.findAQuestion( questionid);
+        Question question =questionImpl.findAQuestion( questionid);
 
-        Optional<Answers> alreadyAnswered= answerRepository.findAnswerByQuestionAndUser(questionid,uid);
+        Optional<Answer> alreadyAnswered= answerRepository.findAnswerByQuestionAndUser(questionid,uid);
         if( alreadyAnswered.isPresent()){
             throw new BusinessException(HttpStatus.BAD_REQUEST, "You have already " +
                     "answered this question Update or delete the previous answer");
@@ -63,18 +59,18 @@ public class AnswerImp  implements AnswersService {
     }
 
     @Override
-    public Page<Answers> findAllAnswer(Pageable pageable) {
+    public Page<Answer> findAllAnswer(Pageable pageable) {
         return  answerRepository.findAll(pageable);
     }
 
     @Override
-    public Answers findAnswer(Long id) {
+    public Answer findAnswer(Long id) {
       return answerRepository.findById(id).
                 orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND, "There is  not such Id in our System: "+id));
     }
 
     @Override
-    public List<Answers> searchForAnswersByQuestion(Pageable pageable, String saerch) {
+    public List<Answer> searchForAnswersByQuestion(Pageable pageable, String saerch) {
         return answerRepository.findAll(pageable)
 
                 .stream().parallel()
@@ -85,12 +81,14 @@ public class AnswerImp  implements AnswersService {
 
     @Override
     public void deleteAnswer(Long userID,Long id, Long questionId) {
+//        islem
         User user=userImp.findUser(userID);
-        Answers answer=findAnswer(id);
+        Answer answer=findAnswer(id);
        if(user.equals(answer.getUser())){
+
         Long isAnswered=answerRepository.numberOfAnsweredQuestion(questionId);
         if(isAnswered==1){
-            Questions question=questionImpl.findAQuestion(questionId);
+            Question question=questionImpl.findAQuestion(questionId);
             answerRepository.delete(answer);
             question.setAnswered(false);
             questionRepository.save(question);
@@ -107,12 +105,12 @@ public class AnswerImp  implements AnswersService {
     @Override
     public void bestAnswer(Long userID,Long id, Long questionId) {
         User user=userImp.findUser(userID);
-        Answers answer=findAnswer(id);
-        List<Answers> answersByQuestionID =answerRepository.findAllAnswersByQuestionID(questionId)
+        Answer answer=findAnswer(id);
+        List<Answer> answersByQuestionID =answerRepository.findAllAnswersByQuestionID(questionId)
                 .stream()
                 .filter(s-> s.isBestAnswer()).collect(Collectors.toList());
         log.equals(answersByQuestionID);
-        for(Answers a: answersByQuestionID){
+        for(Answer a: answersByQuestionID){
             a.setBestAnswer(false);
             answerRepository.save(a);
         }
@@ -121,44 +119,29 @@ public class AnswerImp  implements AnswersService {
         answerRepository.save(answer);
     }
 
+
+
     @Override
-    public String likeAnswer(Long userI, Long answerId)
-
- {
-     return  likeAndUnLikeQuestionOrAnswer(userI,answerId,answerRepository);
-
-
-    }
-
-    public  <T extends JpaRepository> String likeAndUnLikeQuestionOrAnswer(Long userid, Long id, T repository)  {
-        Answers answers= findAnswer(id);
-        log.info("===========================================1");
-        User user=userImp.findUser(userid);
-        Optional<Likes> likes=likesReposiory.findLikeByAnmswerAndUser(id,userid);
+    public String  likeUnlikeAnswer(Long userId, Long answerId) {
+        User user= userImp.findUser(userId);
+        Answer subAnswer=findAnswer(answerId);
+        Optional<AnswerLike> likes= answerLikeRepository.findAnswerLikedByUser(answerId,userId);
         if( likes.isPresent()){
-            likes.get().setUser(user.getId());
-            likes.get().setAnswer(answers.getId());
-
-            int increaseLike = answers.getLikeCount() - 1;
-            answers.setLikeCount(increaseLike);
-            likesReposiory.delete(likes.get());
-            repository.save(answers);
+            answerLikeRepository.delete(likes.get());
             return "unliked";
         }
-
-        Likes newLike = new Likes();
-        newLike.setUser(user.getId());
-        newLike.setAnswer(answers.getId());
-
-        int increaseLike = answers.getLikeCount() + 1;
-        answers.setLikeCount(increaseLike);
-        likesReposiory.save(newLike);
-        repository.save(answers);
-
-        return  "liked";
+        AnswerLike answerLike= new AnswerLike();
+        answerLike.setAnswer(subAnswer);
+        answerLike.setUser(user);
+        answerLikeRepository.save(answerLike);
+        return "Liked";
     }
 
-
+    @Override
+    public Integer answerLikeCount(long id) {
+        return answerLikeRepository.findAnswerLikeCount(id);
+    }
 
 
 }
+

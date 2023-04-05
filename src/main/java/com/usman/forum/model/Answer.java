@@ -19,11 +19,9 @@ import java.util.List;
 @DynamicInsert
 @DynamicUpdate
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "answer_tbl")
-public class Answers  extends AbstractModel{
+public class Answer extends AbstractModel{
 
     private static final long serialVersionUID=1L;
-//    naming
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
@@ -36,14 +34,16 @@ public class Answers  extends AbstractModel{
     private String image;
     @ManyToOne
     @JoinColumn(name = "question_id" ,nullable = false)
-    private Questions question;
+    private Question question;
     @OneToMany(mappedBy = "answer",cascade = CascadeType.REMOVE)
-    private List<SubAnswers> subAnswers;
+    private List<SubAnswer> subAnswer;
     private  boolean bestAnswer;
+    @OneToMany(mappedBy = "answer")
+    private List<AnswerLike> answerLike;
 
 
-    @Column(columnDefinition = "integer default 0")
-    private  Integer likeCount= 0;
+
+
 
 
 
