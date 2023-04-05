@@ -1,24 +1,29 @@
 package com.usman.forum.service;
 
 
-import com.usman.forum.model.Questions;
-import com.usman.forum.model.SubAnswers;
+import com.usman.forum.model.Question;
+import com.usman.forum.model.SubAnswer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 
 public interface SubAnswerService {
-    void saveSubAnswer(SubAnswers answers , Long uid, Long qid);
+    void saveSubAnswer(SubAnswer answers , Long uid, Long qid);
 
 
-    void updateSubAnswer(Long userId,SubAnswers toEntity, Long id);
+    void updateSubAnswer(Long userId, SubAnswer toEntity, Long id);
 
     void deleteSubAnswer(Long userId,Long id);
 
-    Page<SubAnswers> findAllSubAnswer(Pageable pageable);
+    Page<SubAnswer> findAllSubAnswer(Pageable pageable);
 
-    SubAnswers findSubAnswer(Long id);
-    Page<Questions> searchAllInQuestionOrAnswersOrSubAnswer( String search, Pageable pageable);
+    SubAnswer findSubAnswer(Long id);
+    Page<Question> searchAllInQuestionOrAnswersOrSubAnswer(String search, Pageable pageable);
 
-    String likeUnlikeAnswer(Long userI, Long id);
+
+
+
+    String likeUnlikeSubAnswer(Long userId, Long subAnswerId);
+
+    Integer subAnswerLikeCount(long id);
 }

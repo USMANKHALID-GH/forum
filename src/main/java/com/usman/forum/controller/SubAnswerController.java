@@ -4,7 +4,6 @@ package com.usman.forum.controller;
 import com.usman.forum.dto.*;
 import com.usman.forum.mapper.QuestionMapper;
 import com.usman.forum.mapper.SubAnswerMapper;
-import com.usman.forum.model.Questions;
 import com.usman.forum.service.SubAnswerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,8 +40,7 @@ public class SubAnswerController {
 
     @PostMapping("/")
     public ResponseEntity<BaseResponseDto> saveSubAnswer(@RequestHeader Map<String, String> params, @RequestBody SubAnswerDto subAnswerDtoDto){
-        log.info(params.get("userid")+"======================");
-        log.info(params.get("answerid")+"111111111111111111");
+
         Long userid=Long.parseLong(params.get("userid"));
         Long questionId=Long.parseLong(params.get("answerid"));
         service.saveSubAnswer(mapper.toEntity(subAnswerDtoDto),userid,questionId);
@@ -64,18 +62,25 @@ public class SubAnswerController {
 
     }
 
-    @GetMapping("/{search}/searching" )
-            public  ResponseEntity<Page<QuestionDto>>  findAllSubAnswer(@PathVariable("search") String search, Pageable pageable){
+    @GetMapping("/searching" )
+            public  ResponseEntity<Page<QuestionDto>>  findAllSubAnswer(@RequestParam("search") String search, Pageable pageable){
         return  ResponseEntity.ok(new PageImpl<>( questionMapper.toDto(service.searchAllInQuestionOrAnswersOrSubAnswer(search,pageable).getContent())));
 
     }
-    @PostMapping("{id}/like")
-    public ResponseEntity<BaseResponseDto> likeUnlikeAnAnswer(@RequestHeader("userID") Long userI ,@PathVariable("id") Long id){
-        String liked_unliked=service.likeUnlikeAnswer(userI,id);
+
+
+    @PostMapping("like/{id}/sub_answer")
+    public ResponseEntity<BaseResponseDto> likeUnlikeQuestion(@RequestHeader("userID") Long userI ,@PathVariable("id") Long id){
+        String liked_unliked=service.likeUnlikeSubAnswer(userI,id);
         return ResponseEntity.ok(BaseResponseDto.builder().message("Answer is "+liked_unliked+"  successfully").build());
     }
 
 
+    @GetMapping("{id}/like_count")
+    public  ResponseEntity<BaseResponseDto>  getAnswerLikeCount(@PathVariable("id") long id){
+        Integer count=service.subAnswerLikeCount(id);
+        return ResponseEntity.ok(BaseResponseDto.builder().message("SubAnswer like Count= "+count).build());
+    }
 
 
 }

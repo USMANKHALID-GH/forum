@@ -2,21 +2,20 @@ package com.usman.forum.service.Implementation;
 
 import com.usman.forum.exception.BusinessException;
 import com.usman.forum.model.*;
-import com.usman.forum.repository.LikesReposiory;
+import com.usman.forum.repository.AnswerLikeRepository;
+import com.usman.forum.repository.SubAnswerLikeRepository;
 import com.usman.forum.repository.SubAnswerRepository;
 import com.usman.forum.service.SubAnswerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 
 import java.util.Optional;
-import java.util.function.Function;
 
 
 @Validated
@@ -27,42 +26,43 @@ public class SubAnswersImp implements SubAnswerService{
     private final SubAnswerRepository subAnswerRepository;
     private final  UserImp userImp;
     private  final  AnswerImp answerImp;
-    private  final LikesReposiory likesReposiory;
+
+    private final SubAnswerLikeRepository subAnswerLikeRepository;
 
 
     @Override
-    public void saveSubAnswer(SubAnswers subAnswers, Long userid, Long answerId) {
+    public void saveSubAnswer(SubAnswer subAnswer, Long userid, Long answerId) {
         User user=userImp.findUser(userid);
 
-        Answers answer=answerImp.findAnswer(answerId);
+        Answer answer=answerImp.findAnswer(answerId);
 
-        Optional<SubAnswers> alreadyAnswered= subAnswerRepository.findSubAnswerByQuestionAndUser(answerId,userid);
+        Optional<SubAnswer> alreadyAnswered= subAnswerRepository.findSubAnswerByQuestionAndUser(answerId,userid);
 
         if( alreadyAnswered.isPresent()){
             throw new BusinessException(HttpStatus.BAD_REQUEST, "You have already " +
                     "answered this question Update or delete the previous answer");
         }
 
-        subAnswers.setUser(user);
-        subAnswers.setAnswer(answer);
-        subAnswerRepository.save(subAnswers);
+        subAnswer.setUser(user);
+        subAnswer.setAnswer(answer);
+        subAnswerRepository.save(subAnswer);
 
     }
 
     @Override
-    public void updateSubAnswer(Long userId,SubAnswers toEntity, Long id) {
+    public void updateSubAnswer(Long userId, SubAnswer toEntity, Long id) {
         User user=userImp.findUser(userId);
 
-        SubAnswers subAnswers= findSubAnswerById(id);
-        if(user.equals(subAnswers.getUser())) {
+        SubAnswer subAnswer = findSubAnswerById(id);
+        if(user.equals(subAnswer.getUser())) {
             if (!(toEntity.getContent().isEmpty() || toEntity.getContent() == null)) {
-                subAnswers.setContent(toEntity.getContent());
+                subAnswer.setContent(toEntity.getContent());
             }
             if (!(toEntity.getImage().isEmpty() || toEntity.getImage() == null)) {
-                subAnswers.setImage(toEntity.getImage());
+                subAnswer.setImage(toEntity.getImage());
             }
 
-            subAnswerRepository.save(subAnswers);
+            subAnswerRepository.save(subAnswer);
         }
         else{
             throw  new BusinessException(HttpStatus.FORBIDDEN, "You have no permission to update this");
@@ -72,71 +72,87 @@ public class SubAnswersImp implements SubAnswerService{
     @Override
     public void deleteSubAnswer(Long userId,Long id) {
         User user=userImp.findUser(userId);
-        SubAnswers subAnswers=findSubAnswer(id);
-        if(user.equals(subAnswers.getUser())){
-        subAnswerRepository.delete(subAnswers);}
+        SubAnswer subAnswer =findSubAnswer(id);
+        if(user.equals(subAnswer.getUser())){
+        subAnswerRepository.delete(subAnswer);}
         else{
             throw  new BusinessException(HttpStatus.FORBIDDEN, "You have no permission to delete this");
         }
     }
 
     @Override
-    public Page<SubAnswers> findAllSubAnswer(Pageable pageable) {
+    public Page<SubAnswer> findAllSubAnswer(Pageable pageable) {
         return subAnswerRepository.findAll(pageable);
     }
 
     @Override
-    public SubAnswers findSubAnswer(Long id) {
+    public SubAnswer findSubAnswer(Long id) {
         return subAnswerRepository.findById(id)
                 .orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND,"There is no such Id: "+id));
     }
 
     @Override
-    public Page<Questions> searchAllInQuestionOrAnswersOrSubAnswer(String search, Pageable pageable) {
+    public Page<Question> searchAllInQuestionOrAnswersOrSubAnswer(String search, Pageable pageable) {
         return subAnswerRepository.searchAllInQuestionOrAnswersOrSubAnswers(search, pageable);
     }
-    private SubAnswers findSubAnswerById(Long id){
+    private SubAnswer findSubAnswerById(Long id){
         return subAnswerRepository.findById(id)
                 .orElseThrow(()-> new BusinessException(HttpStatus.NOT_FOUND,"There is no such Id: "+id));
     }
 
+
+
+//    islem var
+//    public  <T extends JpaRepository> String likeAndUnLikeQuestionOrAnswer(Long userid, Long id, T repository)  {
+//
+//
+//        SubAnswers answers=findSubAnswer(id);
+//
+//
+//        User user=userImp.findUser(userid);
+//        Optional<AnswerLike> likes= answerLikeRepository.findLikeByAnmswerAndUser(id,userid);
+//        if( likes.isPresent()){
+//            likes.get().setUser(user.getId());
+//            likes.get().setAnswer(answers.getId());
+//
+//            int increaseLike = answers.getLikeCount() - 1;
+//            answers.setLikeCount(increaseLike);
+//            answerLikeRepository.delete(likes.get());
+//            repository.save(answers);
+//            return "unliked";
+//        }
+//
+//        AnswerLike newLike = new AnswerLike();
+//        newLike.setUser(user.getId());
+//        newLike.setAnswer(answers.getId());
+//
+//        int increaseLike = answers.getLikeCount() + 1;
+//        answers.setLikeCount(increaseLike);
+//        answerLikeRepository.save(newLike);
+//        repository.save(answers);
+//
+//        return  "liked";
+//    }
+
     @Override
-    public String likeUnlikeAnswer(Long userI, Long answerId) {
-
-
-        return likeAndUnLikeQuestionOrAnswer(userI,answerId,subAnswerRepository);
-
-    }
-
-    public  <T extends JpaRepository> String likeAndUnLikeQuestionOrAnswer(Long userid, Long id, T repository)  {
-
-
-        SubAnswers answers=findSubAnswer(id);
-
-
-        User user=userImp.findUser(userid);
-        Optional<Likes> likes=likesReposiory.findLikeByAnmswerAndUser(id,userid);
+    public String likeUnlikeSubAnswer(Long userId, Long answerId) {
+        User user= userImp.findUser(userId);
+        SubAnswer subAnswer=findSubAnswer(answerId);
+        Optional<SubAnswerLike> likes= subAnswerLikeRepository.likeUnlikeSubAnswer(answerId,userId);
         if( likes.isPresent()){
-            likes.get().setUser(user.getId());
-            likes.get().setAnswer(answers.getId());
-
-            int increaseLike = answers.getLikeCount() - 1;
-            answers.setLikeCount(increaseLike);
-            likesReposiory.delete(likes.get());
-            repository.save(answers);
+            subAnswerLikeRepository.delete(likes.get());
             return "unliked";
         }
+        SubAnswerLike subAnswerLike= new SubAnswerLike();
+        subAnswerLike.setSubAnswer(subAnswer);
+        subAnswerLike.setUser(user);
+        subAnswerLikeRepository.save(subAnswerLike);
+        return "Liked";
+    }
 
-        Likes newLike = new Likes();
-        newLike.setUser(user.getId());
-        newLike.setAnswer(answers.getId());
-
-        int increaseLike = answers.getLikeCount() + 1;
-        answers.setLikeCount(increaseLike);
-        likesReposiory.save(newLike);
-        repository.save(answers);
-
-        return  "liked";
+    @Override
+    public Integer subAnswerLikeCount(long id) {
+        return subAnswerLikeRepository.findSubAnswerLikeCount(id);
     }
 
 

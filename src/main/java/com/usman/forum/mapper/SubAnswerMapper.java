@@ -2,11 +2,11 @@ package com.usman.forum.mapper;
 
 import com.usman.forum.dto.SubAnswerDto;
 
-import com.usman.forum.model.SubAnswers;
+import com.usman.forum.model.SubAnswer;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface SubAnswerMapper extends EntityMapper<SubAnswerDto, SubAnswers>{
-    SubAnswerDto toDto( SubAnswers subAnswers);
-    SubAnswers toEntity(SubAnswerDto subAnswerDto);
+public interface SubAnswerMapper extends EntityMapper<SubAnswerDto, SubAnswer>{
+    SubAnswerDto toDto( SubAnswer subAnswer);
+    SubAnswer toEntity(SubAnswerDto subAnswerDto);
 }
