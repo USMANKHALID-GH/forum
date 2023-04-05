@@ -23,6 +23,7 @@ public class QuestionDto extends  BaseDto {
     private String image;
     private List<AnswerDto> answer;
     private  CategoryDto category;
+    private List<QuestionLikeDto> questionLike;
 
 
 }

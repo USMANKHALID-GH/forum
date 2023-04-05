@@ -48,4 +48,5 @@ public class Question extends AbstractModel {
     @OneToMany(mappedBy = "question")
     private List<QuestionLike> questionLike;
 
+
 }

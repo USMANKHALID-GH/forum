@@ -22,5 +22,6 @@ public class AnswerDto extends BaseDto {
     private LocalDateTime createdDate;
 
     private List<SubAnswerDto> subAnswer;
+    private List<AnswerLikeDto> answerLike;
 
 }
