@@ -4,7 +4,6 @@ package com.usman.forum.dto;
 
 
 
-import com.usman.forum.model.Answers;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

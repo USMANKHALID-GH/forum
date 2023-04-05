@@ -20,8 +20,7 @@ import java.util.List;
 @DynamicInsert
 @DynamicUpdate
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "question_tbl")
-public class Questions extends AbstractModel {
+public class Question extends AbstractModel {
     private static final long serialVersionUID=1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,9 +39,13 @@ public class Questions extends AbstractModel {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
 
-    private List<Answers> answer;
+    private List<Answer> answer;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "catergory_id", nullable = false)
-   private Category category;
+    private Category category;
+
+    @OneToMany(mappedBy = "question")
+    private List<QuestionLike> questionLike;
+
 }

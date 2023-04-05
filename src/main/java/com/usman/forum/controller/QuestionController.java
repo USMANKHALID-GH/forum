@@ -60,7 +60,18 @@ public class QuestionController {
         return  ResponseEntity.ok(new BaseResponseDto().builder().message("Question updated successfully").build());
     }
 
+    @PostMapping("/{id}/like")
+    public ResponseEntity<BaseResponseDto> likeUnlikeQuestion(@RequestHeader("userID") Long userI ,@PathVariable("id") Long id){
+        String liked_unliked=service.likeUnlikeQuestion(userI,id);
+        return ResponseEntity.ok(BaseResponseDto.builder().message("Answer is "+liked_unliked+"  successfully").build());
+    }
 
+
+    @GetMapping("{id}/like_count")
+    public  ResponseEntity<BaseResponseDto>  getAnswerLikeCount(@PathVariable("id") long id){
+        Integer count=service.questionLikeCount(id);
+        return ResponseEntity.ok(BaseResponseDto.builder().message("question like Count= "+count).build());
+    }
 
 
 
