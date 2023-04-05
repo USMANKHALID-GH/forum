@@ -1,10 +1,10 @@
 package com.usman.forum.service;
 
-import com.usman.forum.model.Questions;
+import com.usman.forum.model.Question;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface CategoryService {
 
-    Page<Questions>  findQuestionByCat(String search, Pageable pageable);
+    Page<Question>  findQuestionByCat(String search, Pageable pageable);
 }

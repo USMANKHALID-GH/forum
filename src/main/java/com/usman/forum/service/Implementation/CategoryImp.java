@@ -1,6 +1,6 @@
 package com.usman.forum.service.Implementation;
 
-import com.usman.forum.model.Questions;
+import com.usman.forum.model.Question;
 import com.usman.forum.repository.QuestionRepository;
 import com.usman.forum.service.CategoryService;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ public class CategoryImp implements CategoryService {
    private final  QuestionRepository questionRepository;
 
     @Override
-    public Page<Questions> findQuestionByCat(String search, Pageable pageable) {
+    public Page<Question> findQuestionByCat(String search, Pageable pageable) {
         return questionRepository.findQuestionByCat(search,pageable);
     }
 }
