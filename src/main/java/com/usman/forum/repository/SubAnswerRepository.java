@@ -23,7 +23,7 @@ public interface SubAnswerRepository  extends JpaRepository<SubAnswer, Long> {
 //    Page<Questions> searchAllInQuestionOrAnswersOrSubAnswers(@Param("search") String search, Pageable pageable);
 
 
-    @Query("select ans.answer.question from   SubAnswer  ans where ans.content like %:search% or ans.answer.content LIKE %:search% or ans.answer.question.content LIKE %:search%")
+    @Query("select ans.answer.question from   SubAnswer  ans where ans.content like %:search% or ans.answer.content LIKE %:search% or ans.answer.question.content LIKE %:search% ORDER BY ans.answer.question.isAnswered " )
     Page<Question> searchAllInQuestionOrAnswersOrSubAnswers(@Param("search") String search, Pageable pageable);
 
 }
