@@ -1,7 +1,10 @@
 package com.usman.forum.service.Implementation;
 
-import com.usman.forum.Config;
+import com.usman.forum.config.Config;
+import com.usman.forum.config.JwtUtil;
+import com.usman.forum.dto.AuthenticationResponse;
 import com.usman.forum.exception.BusinessException;
+import com.usman.forum.model.EnumRole;
 import com.usman.forum.model.User;
 import com.usman.forum.repository.UserRepository;
 import com.usman.forum.service.UserService;
@@ -12,6 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -22,12 +29,43 @@ import org.springframework.stereotype.Service;
 public class UserImp implements UserService {
 
     private final UserRepository userRepository;
-    private Config config;
+    private PasswordEncoder passwordEncoder;
+    private AuthenticationManager authenticationManager;
+
+    private JwtUtil jwtUtil;
+
+    @Override
+    public AuthenticationResponse register(@Valid User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(EnumRole.USER);
+        userRepository.save(user);
+        var token=jwtUtil.generateToken(user);
+        log.info("\n,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,serve");
+        return AuthenticationResponse.builder()
+                .token(token).build();
+    }
+
+    @Override
+    public AuthenticationResponse authenticate(User user) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        user.getEmail(),
+                        user.getPassword()
+                )
+        );
+
+        var userEmail=userRepository.findUserByEmail(user.getEmail()).orElseThrow(()->
+                new UsernameNotFoundException("There is no such user in our System"));
+        var token=jwtUtil.generateToken(userEmail);
+
+        return AuthenticationResponse.builder()
+                .token(token).build();
+    }
 
     @Override
     public void saveUser(@Valid User user) {
 
-        user.setPassword((config.passwordEncryptor().encrypt(user.getPassword())));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
 
     }
