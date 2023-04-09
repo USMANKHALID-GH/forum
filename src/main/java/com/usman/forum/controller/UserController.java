@@ -1,8 +1,12 @@
 package com.usman.forum.controller;
 
+import com.usman.forum.dto.AuthenticationResponse;
 import com.usman.forum.dto.BaseResponseDto;
+import com.usman.forum.dto.UserAuthenticateRequestDto;
 import com.usman.forum.dto.UserDto;
+import com.usman.forum.mapper.AuthenticateMapper;
 import com.usman.forum.mapper.UserMapper;
+import com.usman.forum.model.User;
 import com.usman.forum.service.UserService;
 import lombok.AllArgsConstructor;
 
@@ -12,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -24,6 +29,23 @@ public class UserController {
 
     private final UserService service;
     private  final UserMapper mapper;
+    private AuthenticateMapper authenticateMapper;
+
+
+
+    @PostMapping("/register")
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody UserDto request){
+        User user=mapper.toEntity(request);
+        log.info("\n,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+        return  ResponseEntity.ok(service.register(user));
+
+    }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody UserAuthenticateRequestDto request){
+        User user=authenticateMapper.toEntity(request);
+        return  ResponseEntity.ok(service.authenticate(user));
+    }
 
     @GetMapping("/")
     public  ResponseEntity<Page<UserDto>>  findAllUser(Pageable pageable){
