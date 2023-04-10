@@ -18,6 +18,6 @@ public class UserDto extends BaseDto {
     private String relatedField;
     private  String email;
     private String  phoneNumber;
-    private  String password;
+    private String  password;
     private List<Role> roles;
 }

@@ -36,8 +36,9 @@ public class UserImp implements UserService {
 
     @Override
     public AuthenticationResponse register(@Valid User user) {
+        log.info(user.toString()+"1111111116");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(EnumRole.USER);
+        log.info(user.toString()+"///////1");
         userRepository.save(user);
         var token=jwtUtil.generateToken(user);
         log.info("\n,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,serve");
