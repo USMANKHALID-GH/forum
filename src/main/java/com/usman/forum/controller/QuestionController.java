@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/questions/")
+@RequestMapping("/api/questions")
 public class QuestionController {
 
     private final QuestionService service;
