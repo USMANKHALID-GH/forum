@@ -26,8 +26,7 @@ public class Role  extends  AbstractModel{
     private Long Id;
     private String  name;
 
-    @ManyToMany(mappedBy = "roles")
-    private List<User> user;
+
 
 
 }
