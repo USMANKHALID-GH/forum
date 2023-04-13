@@ -1,10 +1,8 @@
 package com.usman.forum.service.Implementation;
 
-import com.usman.forum.config.Config;
 import com.usman.forum.config.JwtUtil;
 import com.usman.forum.dto.AuthenticationResponse;
 import com.usman.forum.exception.BusinessException;
-import com.usman.forum.model.EnumRole;
 import com.usman.forum.model.User;
 import com.usman.forum.repository.UserRepository;
 import com.usman.forum.service.UserService;
