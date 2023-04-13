@@ -28,10 +28,7 @@ public class GeneralSecurity {
     private  JwtFilter jwtFilter;
     private  JwtUtil jwtUtil;
     private CustomUserDetailsService userDetailsService;
-    private final static String [] USERPERMIT={
-            "/api/questions/**","/api/answer/**","/api/subanswer/**",
-            "/api/category/**",
-};
+
     public UserDetailsService userDetailsService(){
         return userDetailsService;
     }
