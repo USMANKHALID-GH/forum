@@ -33,12 +33,11 @@ public class AnswerController {
     }
 
 
-
-
     @GetMapping("/{id}")
     public  ResponseEntity<AnswerDto>  findAnswer(@PathVariable("id") Long id){
         return ResponseEntity.ok(mapper.toDto(service.findAnswer(id)));
     }
+
 
     @GetMapping("/searching")
     public  ResponseEntity<Page<AnswerDto>>  searchForAnswersByQuestion(Pageable pageable , @RequestParam("search") String search){
