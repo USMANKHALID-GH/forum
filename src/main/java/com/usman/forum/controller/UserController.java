@@ -49,6 +49,7 @@ public class UserController {
 
     @GetMapping("/")
     public  ResponseEntity<Page<UserDto>>  findAllUser(Pageable pageable){
+
         return  ResponseEntity.ok(new PageImpl<>( mapper.toDto(service.findAllUser(pageable).getContent())));
 
     }
