@@ -87,6 +87,7 @@ public class UserImp implements UserService {
         if(!(user.getPhoneNumber().isEmpty()  || user.getPhoneNumber()==null)){
             user1.setPhoneNumber(user.getPhoneNumber());
         }
+        userRepository.save(user);
 
      }
 
