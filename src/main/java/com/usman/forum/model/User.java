@@ -5,10 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,6 +26,7 @@ import java.util.stream.Collectors;
 @DynamicUpdate
 @EqualsAndHashCode(callSuper = true)
 @Table(name="users")
+@Builder
 public class User extends AbstractModel implements UserDetails {
 
     private static final long serialVersionUID=1L;
