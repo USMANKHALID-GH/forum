@@ -1,5 +1,6 @@
 package com.usman.forum.service.Implementation;
 
+import com.usman.forum.Annotations.TrackTime;
 import com.usman.forum.config.JwtUtil;
 import com.usman.forum.dto.AuthenticationResponse;
 import com.usman.forum.exception.BusinessException;
@@ -32,18 +33,26 @@ public class UserImp implements UserService {
 
     private JwtUtil jwtUtil;
 
+    @TrackTime
     @Override
     public AuthenticationResponse register(@Valid User user) {
-        log.info(user.toString()+"1111111116");
+
+        Long start=System.currentTimeMillis();
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        log.info(user.toString()+"///////1");
+
         userRepository.save(user);
         var token=jwtUtil.generateToken(user);
-        log.info("\n,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,serve");
-        return AuthenticationResponse.builder()
+
+        AuthenticationResponse auth= AuthenticationResponse.builder()
                 .token(token).build();
+        Long end =System.currentTimeMillis();
+        log.info("\n"+(end-start)+ "this is the time taking \n");
+        return  auth;
+
     }
 
+    @TrackTime
     @Override
     public AuthenticationResponse authenticate(User user) {
         authenticationManager.authenticate(
