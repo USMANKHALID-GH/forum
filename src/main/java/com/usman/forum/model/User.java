@@ -1,5 +1,6 @@
 package com.usman.forum.model;
 
+import com.usman.forum.Annotations.RoleTypeAnnotation;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
@@ -46,6 +47,7 @@ public class User extends AbstractModel implements UserDetails {
     @NotBlank
     @Column(unique = true,nullable = false)
     private String phoneNumber;
+
     private String password;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
