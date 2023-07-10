@@ -39,7 +39,7 @@ public class GeneralSecurity {
                 auth.
                 requestMatchers(HttpMethod.DELETE,"/api/user/**").hasAnyRole("ADMIN")
 
-                        .requestMatchers("/api/user/**","/api/role/**").permitAll()
+                        .requestMatchers("/api/user/**","/api/role/**","/api/rss/**").permitAll()
 
                         .requestMatchers("/api/questions/").hasAnyRole("USER")
                         .anyRequest().authenticated());
